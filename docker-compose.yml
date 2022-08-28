@@ -1,0 +1,40 @@
+services:
+  web:
+    image: organyze_web_image
+    build:
+      context: ./Docker/web
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+      - "9045:9045"
+    networks:
+      - organyze-net
+    volumes:
+      - ./:/var/www/html
+
+  db:
+    image: organyze_db_image
+    build:
+      context: ./Docker/db
+      dockerfile: ./Dockerfile
+    volumes:
+      - db-data:/etc/data
+    networks:
+      - organyze-net
+    ports:
+      - "7757:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: organyze
+
+  mailer_dev:
+    image: mailhog/mailhog
+    networks:
+      - organyze-net
+    ports:
+      - "8025:8025"
+
+volumes:
+  db-data:
+
+networks:
+  organyze-net: {}
